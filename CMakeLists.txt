@@ -9,7 +9,7 @@ add_executable(sdrpp_dsp ${SRC} ${BACKEND_SRC})
 
 # Set compiler options
 if (MSVC)
-    target_compile_options(sdrpp_dsp PRIVATE /std:c++17 /EHsc) # /O2 /Ob2
+    target_compile_options(sdrpp_dsp PRIVATE /O2 /Ob2 /std:c++17 /EHsc) # /O2 /Ob2
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(sdrpp_dsp PRIVATE -O3 -std=c++17)
 else ()

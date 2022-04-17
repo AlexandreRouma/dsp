@@ -1,8 +1,5 @@
 #include <stdio.h>
-#include <dsp/loop/pll.h>
 #include <dsp/bench/speed_tester.h>
-
-#include <dsp/convert/l_r_to_stereo.h>
 
 #define TEST_BUFFER_SIZE    64000
 #define TEST_DURATION       1000.0
@@ -15,9 +12,9 @@ int main() {
     // ============= DSP Under Test =============
     input = new dsp::stream<dsp::complex_t>;
 
-    dsp::loop::PLL dut(input, 0.01);
-    
-    dsp::convert::LRToStereo test;
+    //dsp::loop::PLL dut(input, 0.01);
+
+
 
     output = &dut.out;
     // ==========================================
