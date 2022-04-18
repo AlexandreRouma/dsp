@@ -1,26 +1,26 @@
 #include <stdio.h>
 #include <dsp/bench/speed_tester.h>
 
-#define TEST_BUFFER_SIZE    64000
+#include <dsp/demod/fm.h>
+
+#define TEST_BUFFER_SIZE    1250
 #define TEST_DURATION       1000.0
 #define TEST_COUNT          5
 
 int main() {
     dsp::stream<dsp::complex_t>* input;
-    dsp::stream<dsp::complex_t>* output;
+    dsp::stream<float>* output;
 
     // ============= DSP Under Test =============
     input = new dsp::stream<dsp::complex_t>;
 
-    //dsp::loop::PLL dut(input, 0.01);
-
-
+    dsp::demod::FM dut(input, 0.5);
 
     output = &dut.out;
     // ==========================================
 
     // Run benchmark
-    dsp::bench::SpeedTester<dsp::complex_t, dsp::complex_t> st(input, output);
+    dsp::bench::SpeedTester<dsp::complex_t, float> st(input, output);
     dut.start();
     for (int i = 0; i < TEST_COUNT; i++) {
         dut.reset();

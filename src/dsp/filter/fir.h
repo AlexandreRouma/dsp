@@ -59,10 +59,10 @@ namespace dsp::filter {
                 if constexpr (std::is_same_v<D, float> && std::is_same_v<T, float>) {
                     volk_32f_x2_dot_prod_32f(&out[i], &buffer[i], _taps.taps, _taps.size);
                 }
-                if constexpr (std::is_same_v<D, complex_t> && std::is_same_v<T, float>) {
+                if constexpr ((std::is_same_v<D, complex_t> || std::is_same_v<D, stereo_t>) && std::is_same_v<T, float>) {
                     volk_32fc_32f_dot_prod_32fc((lv_32fc_t*)&out[i], (lv_32fc_t*)&buffer[i], _taps.taps, _taps.size);
                 }
-                if constexpr (std::is_same_v<D, complex_t> && std::is_same_v<T, complex_t>) {
+                if constexpr ((std::is_same_v<D, complex_t> || std::is_same_v<D, stereo_t>) && std::is_same_v<T, complex_t>) {
                     volk_32fc_x2_dot_prod_32fc((lv_32fc_t*)&out[i], (lv_32fc_t*)&buffer[i], (lv_32fc_t*)_taps.taps, _taps.size);
                 }
             }

@@ -32,6 +32,24 @@ namespace dsp {
             return complex_t{ re - b.re, im - b.im };
         }
 
+        complex_t& operator+=(const complex_t& b) {
+            re += b.re;
+            im += b.im;
+            return *this;
+        }
+
+        complex_t& operator-=(const complex_t& b) {
+            re -= b.re;
+            im -= b.im;
+            return *this;
+        }
+
+        complex_t& operator*=(const float& b) {
+            re *= b;
+            im *= b;
+            return *this;
+        }
+
         inline complex_t conj() {
             return complex_t{ re, -im };
         }
@@ -84,6 +102,24 @@ namespace dsp {
 
         stereo_t operator-(const stereo_t& b) {
             return stereo_t{ l - b.l, r - b.r };
+        }
+
+        stereo_t& operator+=(const stereo_t& b) {
+            l += b.l;
+            r += b.r;
+            return *this;
+        }
+
+        stereo_t& operator-=(const stereo_t& b) {
+            l -= b.l;
+            r -= b.r;
+            return *this;
+        }
+
+        stereo_t& operator*=(const float& b) {
+            l *= b;
+            r *= b;
+            return *this;
         }
 
         float l;

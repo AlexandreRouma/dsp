@@ -2,6 +2,7 @@
 #include "../processor.h"
 #include "../math/fast_atan2.h"
 #include "../math/freq_to_omega.h"
+#include "../math/norm_phase_diff.h"
 
 namespace dsp::demod {
     class FM : public Processor<complex_t, float> {
@@ -30,33 +31,18 @@ namespace dsp::demod {
             _invDeviation = 1.0 / math::freqToOmega(deviation, samplerate);
         }
 
-        inline int process(int count, const complex_t* in, float* out) {
-            // This is somehow faster than volk...
-            float diff, currentPhase;
-            float _phase = phase;
+        inline int process(int count, complex_t* in, float* out) {
             for (int i = 0; i < count; i++) {
-                // Get phase
-                // TODO: Check if using real atan2 for accuracy is worth it
-                currentPhase = math::fastAtan2(in[i].im, in[i].re);
-
-                // Get delta and correct for wrap around
-                diff = currentPhase - _phase;
-                if (diff > 3.1415926535f) {
-                    diff -= 2 * 3.1415926535f;
-                }
-                else if (diff <= -3.1415926535f) {
-                    diff += 2 * 3.1415926535f;
-                }
-
-                // Normalize and write to output
-                out[i] = diff * _invDeviation;
-
-                // Save phase for delta
-                _phase = currentPhase;
+                float cphase = in[i].fastPhase();
+                out[i] = math::normPhaseDiff(cphase - phase) * _invDeviation;
+                phase = cphase;
             }
-            phase = _phase;
-
             return count;
+        }
+
+        void reset() {
+            assert(base_type::_block_init);
+            phase = 0.0f;
         }
 
         int run() {
