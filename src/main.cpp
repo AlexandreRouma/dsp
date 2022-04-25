@@ -1,32 +1,47 @@
 #include <stdio.h>
 #include <dsp/bench/speed_tester.h>
 
-#include <dsp/demod/fm.h>
+#include <dsp/channel/rx_vfo.h>
 
-#define TEST_BUFFER_SIZE    1250
+#include <dsp/chain.h>
+
+#define TEST_BUFFER_SIZE    64000
 #define TEST_DURATION       1000.0
 #define TEST_COUNT          5
 
 int main() {
     dsp::stream<dsp::complex_t>* input;
-    dsp::stream<float>* output;
+    dsp::stream<dsp::complex_t>* output;
 
     // ============= DSP Under Test =============
     input = new dsp::stream<dsp::complex_t>;
 
-    dsp::demod::FM dut(input, 0.5);
+    //dsp::channel::RxVFO dut(input, 1000000000.0, 250000.0, 200000.0, 1000000.0);
 
-    output = &dut.out;
+    dsp::multirate::PowerDecimator<dsp::complex_t> dut(NULL, 256);
+    dsp::multirate::PowerDecimator<dsp::complex_t> dut2(NULL, 256);
+
+    dsp::chain<dsp::complex_t> ch(input);
+    ch.addBlock(&dut, false);
+    ch.addBlock(&dut2, false);
+
+    output = ch.out;
     // ==========================================
 
+
+    ch.enableBlock(&dut2, [&](dsp::stream<dsp::complex_t>* out) {
+        output = out;
+    });
+
+
     // Run benchmark
-    dsp::bench::SpeedTester<dsp::complex_t, float> st(input, output);
-    dut.start();
+    dsp::bench::SpeedTester<dsp::complex_t, dsp::complex_t> st(input, output);
+    ch.start();
     for (int i = 0; i < TEST_COUNT; i++) {
         dut.reset();
         printf("%lf MS/s\n", st.benchmark(TEST_DURATION, TEST_BUFFER_SIZE) / 1000000.0);
     }
-    dut.stop();
+    ch.stop();
 
 
     // for (double f = -0.5; f <= 0.5; f += 0.001) {

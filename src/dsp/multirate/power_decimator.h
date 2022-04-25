@@ -1,7 +1,7 @@
 #pragma once
 #include "../filter/decimating_fir.h"
 #include "../taps/from_array.h"
-#include "ddc/plans.h"
+#include "decim/plans.h"
 
 namespace dsp::multirate {
     template<class T>
@@ -26,7 +26,7 @@ namespace dsp::multirate {
         }
 
         static inline unsigned int getMaxRatio() {
-            return 1 << ddc::plans_len;
+            return 1 << decim::plans_len;
         }
 
         void setRatio(unsigned int ratio) {
@@ -42,7 +42,7 @@ namespace dsp::multirate {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
-            for (auto& fir : ddcFirs) {
+            for (auto& fir : decimFirs) {
                 fir->reset();
             }
             base_type::tempStart();
@@ -59,7 +59,7 @@ namespace dsp::multirate {
             const T* data = in;
             int last = stageCount - 1;
             for (int i = 0; i < stageCount; i++) {
-                auto fir = ddcFirs[i];
+                auto fir = decimFirs[i];
                 count = fir->process(count, data, (i == last) ? out : fir->out.writeBuf);
                 data = fir->out.writeBuf;
             }
@@ -82,10 +82,10 @@ namespace dsp::multirate {
 
     protected:
         void freeFirs() {
-            for (auto& fir : ddcFirs) { delete fir; }
-            for (auto& taps : ddcTaps) { taps::free(taps); }
-            ddcFirs.clear();
-            ddcTaps.clear();
+            for (auto& fir : decimFirs) { delete fir; }
+            for (auto& taps : decimTaps) { taps::free(taps); }
+            decimFirs.clear();
+            decimTaps.clear();
         }
 
         void reconfigure() {
@@ -95,13 +95,13 @@ namespace dsp::multirate {
             // Generate filters based on DDC plan
             if (_ratio) {
                 int planId = log2(_ratio) - 1;
-                ddc::plan plan = decim::plans[planId];
+                decim::plan plan = decim::plans[planId];
                 stageCount = plan.stageCount;
                 for (int i = 0; i < stageCount; i++) {
                     tap<float> taps = taps::fromArray<float>(plan.stages[i].tapcount, plan.stages[i].taps);
                     auto fir = new filter::DecimatingFIR<T, float>(NULL, taps, plan.stages[i].decimation);
-                    ddcTaps.push_back(taps);
-                    ddcFirs.push_back(fir);
+                    decimTaps.push_back(taps);
+                    decimFirs.push_back(fir);
                 }
             }
         }
@@ -111,8 +111,8 @@ namespace dsp::multirate {
             return ((ratio & (ratio - 1)) == 0) && ratio && ratio <= getMaxRatio();
         }
 
-        std::vector<filter::DecimatingFIR<T, float>*> ddcFirs;
-        std::vector<tap<float>> ddcTaps;
+        std::vector<filter::DecimatingFIR<T, float>*> decimFirs;
+        std::vector<tap<float>> decimTaps;
         unsigned int _ratio;
         int stageCount;
     };
