@@ -1,36 +1,21 @@
 #include <stdio.h>
 #include <dsp/bench/speed_tester.h>
 
-#include <dsp/loop/pll.h>
+#include <dsp/channel/rx_vfo.h>
 
-#include <dsp/taps/low_pass.h>
-#include <dsp/taps/band_pass.h>
-#include <dsp/taps/high_pass.h>
-
-#define TEST_BUFFER_SIZE    64000
+#define TEST_BUFFER_SIZE    1024
 #define TEST_DURATION       1000.0
 #define TEST_COUNT          5
 
 int main() {
-    //dsp::tap<float> taps = dsp::taps::bandPass<float>(200.0, 1500.0, 50.0, 3000.0);
-
-    //dsp::tap<float> taps = dsp::taps::lowPass(750.0/2.0, 50.0, 3000.0);
-
-    dsp::tap<float> taps = dsp::taps::highPass(750.0, 50.0, 3000.0);
-
-    for (int i = 0; i < taps.size; i++) {
-        printf("%0.15f\n", (float)taps.taps[i]);
-    }
-
-    return 0;
-
     dsp::stream<dsp::complex_t>* input;
     dsp::stream<dsp::complex_t>* output;
 
     // ============= DSP Under Test =============
     input = new dsp::stream<dsp::complex_t>;
-
-    dsp::loop::PLL dut(input, 0.0001);
+    
+    dsp::tap<float> taps = dsp::taps::lowPass(200, 50, 3000);
+    dsp::filter::DecimatingFIR<dsp::complex_t, float> dut(input, taps, 256);
 
     output = &dut.out;
     // ==========================================

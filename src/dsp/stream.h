@@ -3,6 +3,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <volk/volk.h>
+#include "buffer.h"
 
 // 1MSample buffer
 #define STREAM_BUFFER_SIZE 1000000
@@ -23,20 +24,20 @@ namespace dsp {
     class stream : public untyped_stream {
     public:
         stream() {
-            writeBuf = (T*)volk_malloc(STREAM_BUFFER_SIZE * sizeof(T), volk_get_alignment());
-            readBuf = (T*)volk_malloc(STREAM_BUFFER_SIZE * sizeof(T), volk_get_alignment());
+            writeBuf = allocBuffer<T>(STREAM_BUFFER_SIZE);
+            readBuf = allocBuffer<T>(STREAM_BUFFER_SIZE);
         }
 
         ~stream() {
-            volk_free(writeBuf);
-            volk_free(readBuf);
+            freeBuffer(writeBuf);
+            freeBuffer(readBuf);
         }
 
         void setBufferSize(int samples) {
-            volk_free(writeBuf);
-            volk_free(readBuf);
-            writeBuf = (T*)volk_malloc(samples * sizeof(T), volk_get_alignment());
-            readBuf = (T*)volk_malloc(samples * sizeof(T), volk_get_alignment());
+            freeBuffer(writeBuf);
+            freeBuffer(readBuf);
+            writeBuf = allocBuffer<T>(samples);
+            readBuf = allocBuffer<T>(samples);
         }
 
         inline bool swap(int size) {

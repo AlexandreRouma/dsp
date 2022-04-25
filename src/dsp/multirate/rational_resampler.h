@@ -139,7 +139,7 @@ namespace dsp::multirate {
             rtaps = taps::lowPass(tapBandwidth, tapTransWidth, tapSamplerate);
             resamp.setRatio(interp, decim, rtaps);
 
-            printf("[Resamp] predec: %d, interp: %d, decim: %d, inacc: %lf%%, taps: %d\n", predecRatio, interp, decim, error, tapCount);
+            printf("[Resamp] predec: %d, interp: %d, decim: %d, inacc: %lf%%, taps: %d\n", predecRatio, interp, decim, error, rtaps.size);
 
             mode = useDecim ? Mode::BOTH : Mode::RESAMP_ONLY;
         }

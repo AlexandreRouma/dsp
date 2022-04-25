@@ -33,8 +33,8 @@ namespace dsp::bench {
 
             // Allocate and fill buffer
             inCount = bufferSize;
-            randBuf = (I*)volk_malloc(bufferSize * sizeof(I), volk_get_alignment());
-            for (int i = 0; i < bufferSize; i++) {
+            randBuf = allocBuffer<I>(inCount);
+            for (int i = 0; i < inCount; i++) {
                 if constexpr (std::is_same_v<I, complex_t>) {
                     randBuf[i].re = (2.0f * (float)rand() / (float)RAND_MAX) - 1.0f;
                     randBuf[i].im = (2.0f * (float)rand() / (float)RAND_MAX) - 1.0f;
@@ -51,7 +51,7 @@ namespace dsp::bench {
             start();
             std::this_thread::sleep_for(std::chrono::milliseconds(durationMs));
             stop();
-            volk_free(randBuf);
+            freeBuffer(randBuf);
             return (double)sampCount * 1000.0 / (double)durationMs;
         }
 

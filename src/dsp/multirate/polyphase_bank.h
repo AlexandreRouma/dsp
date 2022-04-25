@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "../taps/tap.h"
+#include "../buffer.h"
 
 namespace dsp::multirate {
     template<class T>
@@ -15,12 +16,13 @@ namespace dsp::multirate {
         // Allocate bank
         PolyphaseBank<T> pb;
         pb.phaseCount = phaseCount;
-        pb.phases = (T**)volk_malloc(phaseCount * sizeof(T*), volk_get_alignment());
+        pb.phases = allocBuffer<T*>(phaseCount);
+        
 
         // Allocate phases
         pb.tapsPerPhase = (taps.size + phaseCount - 1) / phaseCount;
         for (int i = 0; i < phaseCount; i++) {
-            pb.phases[i] = (T*)volk_malloc(pb.tapsPerPhase * sizeof(T), volk_get_alignment());
+            pb.phases[i] = allocBuffer<T>(pb.tapsPerPhase);
         }
 
         // Fill phases
@@ -37,9 +39,9 @@ namespace dsp::multirate {
         if (!bank.phases) { return; }
         for (int i = 0; i < bank.phaseCount; i++) {
             if (!bank.phases[i]) { continue; }
-            volk_free(bank.phases[i]);
+            freeBuffer(bank.phases[i]);
         }
-        volk_free(bank.phases);
+        freeBuffer(bank.phases);
         bank.phases = NULL;
         bank.phaseCount = 0;
         bank.tapsPerPhase = 0;

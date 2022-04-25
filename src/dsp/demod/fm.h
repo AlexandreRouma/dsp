@@ -33,7 +33,7 @@ namespace dsp::demod {
 
         inline int process(int count, complex_t* in, float* out) {
             for (int i = 0; i < count; i++) {
-                float cphase = in[i].fastPhase();
+                float cphase = in[i].phase();
                 out[i] = math::normPhaseDiff(cphase - phase) * _invDeviation;
                 phase = cphase;
             }
