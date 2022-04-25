@@ -28,6 +28,13 @@ namespace dsp::loop {
             phaseDelta = _maxPhase - _minPhase;
         }
 
+        static inline void criticallyDamped(T bandwidth, T& alpha, T& beta) {
+            T dampningFactor = sqrt(2.0) / 2.0;
+            T denominator = (1.0 + 2.0*dampningFactor*bandwidth + bandwidth*bandwidth);
+            alpha = (4 * dampningFactor * bandwidth) / denominator;
+            beta = (4 * bandwidth * bandwidth) / denominator;
+        }
+
         void setPhaseLimits(T minPhase, T maxPhase) {
             assert(maxPhase > minPhase);
             _minPhase = minPhase;

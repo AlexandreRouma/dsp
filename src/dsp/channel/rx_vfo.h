@@ -100,11 +100,9 @@ namespace dsp::channel {
 
     protected:
         void updateTaps() {
-            // TODO: Write function to calculate the number of taps
-            double filterWidth = _bandwidth / 2.0;
-            int tapCount = round(3.8 / (filterWidth * 0.1 / _outSamplerate));
             taps::free(ftaps);
-            ftaps = taps::windowedSinc<float>(tapCount, filterWidth, _outSamplerate, window::nuttall);
+            double filterWidth = _bandwidth / 2.0;
+            ftaps = taps::lowPass(filterWidth, filterWidth * 0.1, _outSamplerate);
         }
 
         FrequencyXlator xlator;

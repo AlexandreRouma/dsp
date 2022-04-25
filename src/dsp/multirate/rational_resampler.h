@@ -6,7 +6,7 @@
 #include "../taps/from_array.h"
 #include "polyphase_resampler.h"
 #include "power_decimator.h"
-#include "../taps/windowed_sinc.h"
+#include "../taps/low_pass.h"
 #include "../window/nuttall.h"
 
 namespace dsp::multirate {
@@ -23,7 +23,7 @@ namespace dsp::multirate {
             _outSamplerate = outSamplerate;
             
             // Dummy initialization since only used for processing
-            rtaps = taps::windowedSinc<float>(1, 0.25, 1.0, window::nuttall);
+            rtaps = taps::lowPass(0.25, 0.1, 1.0);
             decim.init(NULL, 2);
             resamp.init(NULL, 1, 1, rtaps);
 
@@ -135,10 +135,8 @@ namespace dsp::multirate {
             double tapSamplerate = intSamplerate * (double)interp;
             double tapBandwidth = _outSamplerate / 2.0;
             double tapTransWidth = tapBandwidth * 0.1;
-            // TODO: Have a specific function per window to calculate this
-            int tapCount = 3.8 * tapSamplerate / tapTransWidth;
             taps::free(rtaps);
-            rtaps = taps::windowedSinc<float>(tapCount, tapBandwidth, tapSamplerate, window::nuttall);
+            rtaps = taps::lowPass(tapBandwidth, tapTransWidth, tapSamplerate);
             resamp.setRatio(interp, decim, rtaps);
 
             printf("[Resamp] predec: %d, interp: %d, decim: %d, inacc: %lf%%, taps: %d\n", predecRatio, interp, decim, error, tapCount);

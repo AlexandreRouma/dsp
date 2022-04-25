@@ -1,9 +1,8 @@
 #pragma once
 #include "../processor.h"
 #include "../math/norm_phase_diff.h"
+#include "../math/phasor.h"
 #include "phase_control_loop.h"
-
-// TODO: FINISH THIS
 
 namespace dsp::loop {
     class PLL : public Processor<complex_t, complex_t> {
@@ -11,25 +10,47 @@ namespace dsp::loop {
     public:
         PLL() {}
 
-        PLL(stream<complex_t>* in, double bandwidth, double initFreq = 0.0, double initPhase = 0.0) { init(in, bandwidth, initFreq, initPhase); }
+        PLL(stream<complex_t>* in, double bandwidth, double initPhase = 0.0, double initFreq = 0.0, double minFreq = -FL_M_PI, double maxFreq = FL_M_PI) { init(in, bandwidth, initFreq, initPhase, minFreq, maxFreq); }
 
-        void init(stream<complex_t>* in, double bandwidth, double initFreq = 0.0, double initPhase = 0.0) {
-            pcl.init(0.1, 0.1, 0.0, -2.0f * FL_M_PI, 2.0f * FL_M_PI, 0.0, -1.0, 1.0);
+        void init(stream<complex_t>* in, double bandwidth, double initPhase = 0.0, double initFreq = 0.0, double minFreq = -FL_M_PI, double maxFreq = FL_M_PI) {
+            _initPhase = initPhase;
+            _initFreq = initFreq;
+
+            // Init phase control loop
+            float alpha, beta;
+            PhaseControlLoop<float>::criticallyDamped(bandwidth, alpha, beta);
+            pcl.init(alpha, beta, initPhase, -FL_M_PI, FL_M_PI, initFreq, minFreq, maxFreq);
+            
             base_type::init(in);
+        }
+
+        void setInitialPhase(double initPhase) {
+            assert(base_type::_block_init);
+            _initPhase = initPhase;
+        }
+
+        void setInitialFreq(double initFreq) {
+            assert(base_type::_block_init);
+            _initFreq = initFreq;
+        }
+
+        void setFrequencyLimits(double minFreq, double maxFreq) {
+            assert(base_type::_block_init);
+            pcl.setFreqLimits(minFreq, maxFreq);
         }
 
         void reset() {
             assert(base_type::_block_init);
             base_type::tempStop();
-
+            pcl.phase = _initPhase;
+            pcl.freq = _initFreq;
             base_type::tempStart();
         }
 
-        inline int process(int count, const complex_t* in, complex_t* out) {
-            float err;
+        inline int process(int count, complex_t* in, complex_t* out) {
             for (int i = 0; i < count; i++) {
-                out[i] = { cosf(pcl.phase), sinf(pcl.phase) };
-                pcl.advance(math::normPhaseDiff(atan2f(in[i].re, in[i].im) - pcl.phase));
+                out[i] = math::phasor(pcl.phase);
+                pcl.advance(math::normPhaseDiff(in[i].phase() - pcl.phase));
             }
             return count;
         }
@@ -47,12 +68,8 @@ namespace dsp::loop {
 
     protected:
         PhaseControlLoop<float> pcl;
-
-        float vcoPhase = 0.0f;
-        float vcoFrequency = 0.0f;
-        float alpha = 0.0f;
-        float _alpha = 0.1f;
-        float _beta = 0.1f;
+        float _initPhase;
+        float _initFreq;
         complex_t lastVCO = { 1.0f, 0.0f };
 
     };
