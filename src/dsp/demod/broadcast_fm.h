@@ -20,7 +20,7 @@ namespace dsp::demod {
 
         BroadcastFM(stream<complex_t>* in, double deviation, double samplerate, bool stereo = true) { init(in, deviation, samplerate, stereo); }
 
-        BroadcastFM() {
+        ~BroadcastFM() {
             if (!base_type::_block_init) { return; }
             base_type::stop();
             freeBuffer(lmr);

@@ -4,6 +4,7 @@
 namespace dsp::math {
     template <class T>
     class Subtract : public Operator<T, T, T> {
+        using base_type = Operator<T, T, T>;
     public:
         Subtract() {}
 

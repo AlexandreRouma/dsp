@@ -17,8 +17,10 @@ namespace dsp::math {
         }
 
         void init(stream<T>* in, int delay) {
-            buffer = allocBuffer(STREAM_BUFFER_SIZE + 64000);
-            setDelay(delay);
+            buffer = allocBuffer<float>(STREAM_BUFFER_SIZE + 64000);
+            clearBuffer(buffer, _delay);
+            _delay = delay;
+            bufStart = &buffer[_delay];
             base_type::init(in);
         }
 
@@ -45,7 +47,7 @@ namespace dsp::math {
             memcpy(bufStart, in, count * sizeof(T));
 
             // Copy data out of the delay buffer
-            memcpy(out, buffer);
+            memcpy(out, buffer, count * sizeof(T));
 
             // Move end of the delay buffer to the front
             memmove(buffer, &buffer[count], _delay * sizeof(T));

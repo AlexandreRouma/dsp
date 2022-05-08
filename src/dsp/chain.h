@@ -44,6 +44,21 @@ namespace dsp {
         }
 
         template<typename Func>
+        void removeBlock(Processor<T, T>* block Func onOutputChange) {
+            // Check if block is part of the chain
+            if (!blockExists(block)) {
+                throw std::runtime_error("Tried to remove a block that is not part of the chain");
+            }
+
+            // Disable the block
+            disableBlock(block, onOutputChange);
+        
+            // Remove block from the list
+            states.erase(block);
+            links.erase(std::find(links.begin(), links.end(), block));
+        }
+
+        template<typename Func>
         void enableBlock(Processor<T, T>* block, Func onOutputChange) {
             // Check that the block is part of the chain
             if (!blockExists(block)) {

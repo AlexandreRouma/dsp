@@ -1,28 +1,27 @@
 #include <stdio.h>
 #include <dsp/bench/speed_tester.h>
 
-#include <dsp/channel/rx_vfo.h>
+#include <dsp/demod/broadcast_fm.h>
 
-#define TEST_BUFFER_SIZE    1024
+#define TEST_BUFFER_SIZE    1250
 #define TEST_DURATION       1000.0
 #define TEST_COUNT          5
 
 int main() {
     dsp::stream<dsp::complex_t>* input;
-    dsp::stream<dsp::complex_t>* output;
+    dsp::stream<dsp::stereo_t>* output;
 
     // ============= DSP Under Test =============
     input = new dsp::stream<dsp::complex_t>;
     
-    dsp::tap<float> taps = dsp::taps::lowPass(200, 50, 3000);
-    dsp::filter::DecimatingFIR<dsp::complex_t, float> dut(input, taps, 256);
+    dsp::demod::BroadcastFM dut(input, 100000.0, 250000.0, true);
 
     output = &dut.out;
     // ==========================================
 
 
     // Run benchmark
-    dsp::bench::SpeedTester<dsp::complex_t, dsp::complex_t> st(input, output);
+    dsp::bench::SpeedTester<dsp::complex_t, dsp::stereo_t> st(input, output);
     dut.start();
     for (int i = 0; i < TEST_COUNT; i++) {
         dut.reset();

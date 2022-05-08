@@ -26,21 +26,25 @@ namespace dsp::loop {
 
         void setInitialPhase(double initPhase) {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             _initPhase = initPhase;
         }
 
         void setInitialFreq(double initFreq) {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             _initFreq = initFreq;
         }
 
         void setFrequencyLimits(double minFreq, double maxFreq) {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             pcl.setFreqLimits(minFreq, maxFreq);
         }
 
         void reset() {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
             pcl.phase = _initPhase;
             pcl.freq = _initFreq;
