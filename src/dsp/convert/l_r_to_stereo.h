@@ -17,7 +17,7 @@ namespace dsp::convert {
 
         void setInputR(stream<float>* r) { base_type::setInputB(r); }
         
-        inline int process(int count, const float* l, const float* r, stereo_t* out) {
+        static inline int process(int count, const float* l, const float* r, stereo_t* out) {
             volk_32f_x2_interleave_32fc((lv_32fc_t*)out, l, r, count);
             return count;
         }

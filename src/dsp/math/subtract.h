@@ -9,7 +9,7 @@ namespace dsp::math {
 
         Subtract(stream<T>* a, stream<T>* b) { init(a, b); }
 
-        inline int process(int count, const T* a, const T* b, T* out) {
+        inline static int process(int count, const T* a, const T* b, T* out) {
             if constexpr (std::is_same_v<T, complex_t> || std::is_same_v<T, stereo_t>) {
                 volk_32f_x2_subtract_32f((float*)out, (float*)a, (float*)b, count * 2);
             }

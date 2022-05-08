@@ -16,7 +16,7 @@ namespace dsp::convert {
 
         void init(stream<float>* in) {
             nullBuf = allocBuffer<float>(STREAM_BUFFER_SIZE);
-            // TODO: Null out only needed part
+            clearBuffer(nullBuf, STREAM_BUFFER_SIZE);
             base_type::init(in);
         }
 
