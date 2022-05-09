@@ -57,8 +57,8 @@ namespace dsp::demod {
         }
 
         int process(int count, const complex_t* in, float* out) {
-            agc.process(count, in, agc.out.writeBuf)
-            xlator.process(count, agc.out.writeBuf, out);
+            xlator.process(count, in, xlator.out.writeBuf);
+            agc.process(count, (const float*)xlator.out.writeBuf, out);
             return count;
         }
 
