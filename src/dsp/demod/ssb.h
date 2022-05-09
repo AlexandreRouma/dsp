@@ -18,6 +18,7 @@ namespace dsp::demod {
 
         void init(stream<complex_t>* in, Mode mode, double agcRate) {
             _mode = mode;
+            xlator.init(NULL, (_mode == Mode::USB) ? (_bandwidth / 2.0) : (-_bandwidth / 2.0), _samplerate);
             agc.init(NULL, 1.0, agcRate);
             base_type::init(in);
         }
@@ -25,7 +26,28 @@ namespace dsp::demod {
         void setMode(Mode mode) {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
+            base_type::tempStop();
             _mode = mode;
+            xlator.setOffset((_mode == Mode::USB) ? (_bandwidth / 2.0) : (-_bandwidth / 2.0), _samplerate);
+            base_type::tempStart();
+        }
+
+        void setBandwidth(double bandwidth) {
+            assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
+            base_type::tempStop();
+            _bandwidth = bandwidth;
+            xlator.setOffset((_mode == Mode::USB) ? (_bandwidth / 2.0) : (-_bandwidth / 2.0), _samplerate);
+            base_type::tempStart();
+        }
+
+        void setSamplerate(double samplerate) {
+            assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
+            base_type::tempStop();
+            _samplerate = samplerate;
+            xlator.setOffset((_mode == Mode::USB) ? (_bandwidth / 2.0) : (-_bandwidth / 2.0), _samplerate);
+            base_type::tempStart();
         }
 
         void setAGCRate(double agcRate) {
@@ -35,7 +57,9 @@ namespace dsp::demod {
         }
 
         int process(int count, const complex_t* in, float* out) {
-
+            agc.process(count, in, agc.out.writeBuf)
+            xlator.process(count, agc.out.writeBuf, out);
+            return count;
         }
 
     protected:
