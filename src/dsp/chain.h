@@ -117,6 +117,16 @@ namespace dsp {
             }
         }
 
+        template<typename Func>
+        void setBlockEnabled(Processor<T, T>* block, bool enabled, Func onOutputChange) {
+            if (enabled) {
+                enableBlock(block, onOutputChange);
+            }
+            else {
+                disableBlock(block, onOutputChange);
+            }
+        }
+
         void start() {
             if (running) { return; }
             for (auto& ln : links) {
