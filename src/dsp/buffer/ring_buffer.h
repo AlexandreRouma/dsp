@@ -28,7 +28,7 @@ namespace dsp::buffer {
             readc = 0;
             readable = 0;
             writable = size;
-            _buffer = buffer::alloc(size);
+            _buffer = buffer::alloc<T>(size);
             buffer::clear(_buffer, size);
             _init = true;
         }
