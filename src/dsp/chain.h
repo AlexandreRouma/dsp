@@ -32,7 +32,7 @@ namespace dsp {
         void addBlock(Processor<T, T>* block, bool enabled) {
             // Check if block is already part of the chain
             if (blockExists(block)) {
-                throw std::runtime_error("Tried to add a block that is already part of the chain");
+                throw std::runtime_error("[chain] Tried to add a block that is already part of the chain");
             }
 
             // Add to the list
@@ -47,7 +47,7 @@ namespace dsp {
         void removeBlock(Processor<T, T>* block Func onOutputChange) {
             // Check if block is part of the chain
             if (!blockExists(block)) {
-                throw std::runtime_error("Tried to remove a block that is not part of the chain");
+                throw std::runtime_error("[chain] Tried to remove a block that is not part of the chain");
             }
 
             // Disable the block
@@ -62,7 +62,7 @@ namespace dsp {
         void enableBlock(Processor<T, T>* block, Func onOutputChange) {
             // Check that the block is part of the chain
             if (!blockExists(block)) {
-                throw std::runtime_error("Tried to enable a block that isn't part of the chain");
+                throw std::runtime_error("[chain] Tried to enable a block that isn't part of the chain");
             }
             
             // If already enable, don't do anything
@@ -93,11 +93,15 @@ namespace dsp {
         void disableBlock(Processor<T, T>* block, Func onOutputChange) {
             // Check that the block is part of the chain
             if (!blockExists(block)) {
-                throw std::runtime_error("Tried to enable a block that isn't part of the chain");
+                throw std::runtime_error("[chain] Tried to enable a block that isn't part of the chain");
             }
             
             // If already disabled, don't do anything
             if (!states[block]) { return; }
+
+            // Stop disabled block
+            block->stop();
+            states[block] = false;
 
             // Gather blocks before and after the block to disable
             Processor<T, T>* before = blockBefore(block);
@@ -111,10 +115,6 @@ namespace dsp {
                 out = before ? &before->out : _in;
                 onOutputChange(out);
             }
-
-            // Stop disabled block
-            block->stop();
-            states[block] = false;
         }
 
         void start() {
