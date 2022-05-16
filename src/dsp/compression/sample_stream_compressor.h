@@ -17,6 +17,7 @@ namespace dsp::compression {
 
         void setPCMType(PCMType pcmType) {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
             _pcmType = pcmType;
             base_type::tempStart();

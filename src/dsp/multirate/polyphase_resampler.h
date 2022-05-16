@@ -14,8 +14,8 @@ namespace dsp::multirate {
 
         ~PolyphaseResampler() {
             if (!base_type::_block_init) { return; }
-            stop();
-            freeBuffer(buffer);
+            base_type::stop();
+            buffer::free(buffer);
             freePolyphaseBank(phases);
         }
 
@@ -28,9 +28,9 @@ namespace dsp::multirate {
             phases = buildPolyphaseBank(_interp, _taps);
 
             // Allocate delay buffer
-            buffer = allocBuffer<T>(STREAM_BUFFER_SIZE + 64000);
+            buffer = buffer::alloc<T>(STREAM_BUFFER_SIZE + 64000);
             bufStart = &buffer[phases.tapsPerPhase - 1];
-            clearBuffer<T>(buffer, phases.tapsPerPhase - 1);
+            buffer::clear<T>(buffer, phases.tapsPerPhase - 1);
 
             base_type::init(in);
         }
@@ -60,7 +60,7 @@ namespace dsp::multirate {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
-            clearBuffer<T>(buffer, phases.tapsPerPhase - 1);
+            buffer::clear<T>(buffer, phases.tapsPerPhase - 1);
             phase = 0;
             offset = 0;
             base_type::tempStart();

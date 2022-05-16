@@ -24,6 +24,7 @@ namespace dsp::correction {
 
         void setRate(double rate) {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             _rate = rate;
         }
 
@@ -33,6 +34,7 @@ namespace dsp::correction {
 
         void reset() {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
             if constexpr (std::is_same_v<T, float>) {
                 offset = 0.0f;

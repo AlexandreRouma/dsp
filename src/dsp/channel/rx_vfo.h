@@ -60,6 +60,7 @@ namespace dsp::channel {
 
         void setOffset(double offset) {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             _offset = offset;
             xlator.setOffset(_offset);
         }

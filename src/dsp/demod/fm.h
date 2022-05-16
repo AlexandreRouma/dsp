@@ -24,10 +24,14 @@ namespace dsp::demod {
         }
 
         void setDeviation(double deviation) {
+            assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             _invDeviation = 1.0 / deviation;
         }
 
         void setDeviation(double deviation, double samplerate) {
+            assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             _invDeviation = 1.0 / math::freqToOmega(deviation, samplerate);
         }
 
@@ -42,6 +46,7 @@ namespace dsp::demod {
 
         void reset() {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             phase = 0.0f;
         }
 

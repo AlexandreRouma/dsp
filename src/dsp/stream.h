@@ -3,7 +3,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <volk/volk.h>
-#include "buffer.h"
+#include "buffer/buffer.h"
 
 // 1MSample buffer
 #define STREAM_BUFFER_SIZE 1000000
@@ -24,23 +24,23 @@ namespace dsp {
     class stream : public untyped_stream {
     public:
         stream() {
-            writeBuf = allocBuffer<T>(STREAM_BUFFER_SIZE);
-            readBuf = allocBuffer<T>(STREAM_BUFFER_SIZE);
+            writeBuf = buffer::alloc<T>(STREAM_BUFFER_SIZE);
+            readBuf = buffer::alloc<T>(STREAM_BUFFER_SIZE);
         }
 
-        ~stream() {
-            freeBuffer(writeBuf);
-            freeBuffer(readBuf);
+        virtual ~stream() {
+            buffer::free(writeBuf);
+            buffer::free(readBuf);
         }
 
-        void setBufferSize(int samples) {
-            freeBuffer(writeBuf);
-            freeBuffer(readBuf);
-            writeBuf = allocBuffer<T>(samples);
-            readBuf = allocBuffer<T>(samples);
+        virtual void setBufferSize(int samples) {
+            buffer::free(writeBuf);
+            buffer::free(readBuf);
+            writeBuf = buffer::alloc<T>(samples);
+            readBuf = buffer::alloc<T>(samples);
         }
 
-        inline bool swap(int size) {
+        virtual inline bool swap(int size) {
             {
                 // Wait to either swap or stop
                 std::unique_lock<std::mutex> lck(swapMtx);
@@ -67,7 +67,7 @@ namespace dsp {
             return true;
         }
 
-        inline int read() {
+        virtual inline int read() {
             // Wait for data to be ready or to be stopped
             std::unique_lock<std::mutex> lck(rdyMtx);
             rdyCV.wait(lck, [this] { return (dataReady || readerStop); });
@@ -75,7 +75,7 @@ namespace dsp {
             return (readerStop ? -1 : dataSize);
         }
 
-        inline void flush() {
+        virtual inline void flush() {
             // Clear data ready
             {
                 std::lock_guard<std::mutex> lck(rdyMtx);
@@ -91,7 +91,7 @@ namespace dsp {
             swapCV.notify_all();
         }
 
-        void stopWriter() {
+        virtual void stopWriter() {
             {
                 std::lock_guard<std::mutex> lck(swapMtx);
                 writerStop = true;
@@ -99,11 +99,11 @@ namespace dsp {
             swapCV.notify_all();
         }
 
-        void clearWriteStop() {
+        virtual void clearWriteStop() {
             writerStop = false;
         }
 
-        void stopReader() {
+        virtual void stopReader() {
             {
                 std::lock_guard<std::mutex> lck(rdyMtx);
                 readerStop = true;
@@ -111,7 +111,7 @@ namespace dsp {
             rdyCV.notify_all();
         }
 
-        void clearReadStop() {
+        virtual void clearReadStop() {
             readerStop = false;
         }
 

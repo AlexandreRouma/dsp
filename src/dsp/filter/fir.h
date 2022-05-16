@@ -14,16 +14,16 @@ namespace dsp::filter {
         ~FIR() {
             if (!base_type::_block_init) { return; }
             base_type::stop();
-            freeBuffer(buffer);
+            buffer::free(buffer);
         }
 
         virtual void init(stream<D>* in, tap<T>& taps) {
             _taps = taps;
 
             // Allocate and clear buffer
-            buffer = allocBuffer<D>(STREAM_BUFFER_SIZE + 64000);
+            buffer = buffer::alloc<D>(STREAM_BUFFER_SIZE + 64000);
             bufStart = &buffer[_taps.size - 1];
-            clearBuffer<D>(buffer, _taps.size - 1);
+            buffer::clear<D>(buffer, _taps.size - 1);
 
             base_type::init(in);
         }
@@ -37,7 +37,7 @@ namespace dsp::filter {
 
             // Reset buffer
             bufStart = &buffer[_taps.size - 1];
-            clearBuffer<D>(buffer, _taps.size - 1);
+            buffer::clear<D>(buffer, _taps.size - 1);
 
             base_type::tempStart();
         }
@@ -46,7 +46,7 @@ namespace dsp::filter {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
-            clearBuffer<D>(buffer, _taps.size - 1);
+            buffer::clear<D>(buffer, _taps.size - 1);
             base_type::tempStart();
         }
 

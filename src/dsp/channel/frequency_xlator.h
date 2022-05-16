@@ -24,6 +24,7 @@ namespace dsp::channel {
 
         void setOffset(double offset) {
             assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             phaseDelta = lv_cmake(cos(offset), sin(offset));
         }
 

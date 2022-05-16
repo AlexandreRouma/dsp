@@ -23,9 +23,9 @@ namespace dsp::demod {
         ~BroadcastFM() {
             if (!base_type::_block_init) { return; }
             base_type::stop();
-            freeBuffer(lmr);
-            freeBuffer(l);
-            freeBuffer(r);
+            buffer::free(lmr);
+            buffer::free(l);
+            buffer::free(r);
         }
 
         virtual void init(stream<complex_t>* in, double deviation, double samplerate, bool stereo = true) {
@@ -40,9 +40,9 @@ namespace dsp::demod {
             pilotPLL.init(NULL, 0.1/*TODO*/, 0.0, math::freqToOmega(19000.0, _samplerate), math::freqToOmega(18750.0, _samplerate), math::freqToOmega(19250.0, _samplerate));
             delay.init(NULL, pilotFirTaps.size / 2.0);
 
-            lmr = allocBuffer<float>(STREAM_BUFFER_SIZE);
-            l = allocBuffer<float>(STREAM_BUFFER_SIZE);
-            r = allocBuffer<float>(STREAM_BUFFER_SIZE);
+            lmr = buffer::alloc<float>(STREAM_BUFFER_SIZE);
+            l = buffer::alloc<float>(STREAM_BUFFER_SIZE);
+            r = buffer::alloc<float>(STREAM_BUFFER_SIZE);
 
             base_type::init(in);
         }

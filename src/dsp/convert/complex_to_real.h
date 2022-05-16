@@ -26,6 +26,5 @@ namespace dsp::convert {
             if (!base_type::out.swap(count)) { return -1; }
             return count;
         }
-
     };
 }

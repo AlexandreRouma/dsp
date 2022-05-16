@@ -13,6 +13,7 @@ namespace dsp::noise_reduction {
 
         ~FMIF() {
             if (!base_type::_block_init) { return; }
+            base_type::stop();
             destroyBuffers();
         }
 
@@ -36,8 +37,8 @@ namespace dsp::noise_reduction {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
-            clearBuffer(buffer, _bins - 1);
-            clearBuffer(backFFTIn, _bins);
+            buffer::clear(buffer, _bins - 1);
+            buffer::clear(backFFTIn, _bins);
             base_type::tempStart();
         }
 
@@ -84,18 +85,18 @@ namespace dsp::noise_reduction {
             backFFTOut = (complex_t*)fftwf_malloc(_bins * sizeof(complex_t));
 
             // Allocate and clear delay buffer
-            buffer = allocBuffer<complex_t>(STREAM_BUFFER_SIZE + 64000);
+            buffer = buffer::alloc<complex_t>(STREAM_BUFFER_SIZE + 64000);
             bufferStart = &buffer[_bins - 1];
-            clearBuffer(buffer, _bins - 1);
+            buffer::clear(buffer, _bins - 1);
 
             // Clear backward FFT input since only one value is changed and reset at a time
-            clearBuffer(backFFTIn, _bins);
+            buffer::clear(backFFTIn, _bins);
 
             // Allocate amplitude buffer
-            ampBuf = allocBuffer<float>(_bins);
+            ampBuf = buffer::alloc<float>(_bins);
 
             // Allocate and generate Window
-            fftWin = allocBuffer<float>(_bins);
+            fftWin = buffer::alloc<float>(_bins);
             for (int i = 0; i < _bins; i++) { fftWin[i] = window::nuttall(i, _bins - 1); }
 
             // Plan FFTs
@@ -110,9 +111,9 @@ namespace dsp::noise_reduction {
             fftwf_free(forwFFTOut);
             fftwf_free(backFFTIn);
             fftwf_free(backFFTOut);
-            freeBuffer(buffer);
-            freeBuffer(ampBuf);
-            freeBuffer(fftWin);
+            buffer::free(buffer);
+            buffer::free(ampBuf);
+            buffer::free(fftWin);
         }
 
         complex_t* forwFFTIn;

@@ -11,12 +11,13 @@ namespace dsp::convert {
 
         ~RealToComplex() {
             if (!base_type::_block_init) { return; }
-            freeBuffer(nullBuf);
+            base_type::stop();
+            buffer::free(nullBuf);
         }
 
         void init(stream<float>* in) {
-            nullBuf = allocBuffer<float>(STREAM_BUFFER_SIZE);
-            clearBuffer(nullBuf, STREAM_BUFFER_SIZE);
+            nullBuf = buffer::alloc<float>(STREAM_BUFFER_SIZE);
+            buffer::clear(nullBuf, STREAM_BUFFER_SIZE);
             base_type::init(in);
         }
 

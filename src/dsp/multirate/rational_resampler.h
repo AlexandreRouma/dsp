@@ -42,22 +42,6 @@ namespace dsp::multirate {
             base_type::tempStart();
         }
 
-        inline int process(int count, const T* in, T* out) {
-            switch(mode) {
-                case Mode::BOTH:
-                    count = decim.process(count, in, decim.out.writeBuf);
-                    return resamp.process(count, decim.out.writeBuf, out);
-                case Mode::DECIM_ONLY:
-                    return decim.process(count, in, out);
-                case Mode::RESAMP_ONLY:
-                    return resamp.process(count, in, out);
-                case Mode::NONE:
-                    memcpy(out, in, count * sizeof(T));
-                    return count;
-            }
-            return count;
-        }
-
         void setInSamplerate(double inSamplerate) {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
@@ -74,6 +58,22 @@ namespace dsp::multirate {
             _outSamplerate = outSamplerate;
             reconfigure();
             base_type::tempStart();
+        }
+
+        inline int process(int count, const T* in, T* out) {
+            switch(mode) {
+                case Mode::BOTH:
+                    count = decim.process(count, in, decim.out.writeBuf);
+                    return resamp.process(count, decim.out.writeBuf, out);
+                case Mode::DECIM_ONLY:
+                    return decim.process(count, in, out);
+                case Mode::RESAMP_ONLY:
+                    return resamp.process(count, in, out);
+                case Mode::NONE:
+                    memcpy(out, in, count * sizeof(T));
+                    return count;
+            }
+            return count;
         }
 
         int run() {

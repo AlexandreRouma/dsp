@@ -13,12 +13,12 @@ namespace dsp::math {
         ~Delay() {
             if (!base_type::_block_init) { return; }
             base_type::stop();
-            freeBuffer(buffer);
+            buffer::free(buffer);
         }
 
         void init(stream<T>* in, int delay) {
-            buffer = allocBuffer<float>(STREAM_BUFFER_SIZE + 64000);
-            clearBuffer(buffer, _delay);
+            buffer = buffer::alloc<float>(STREAM_BUFFER_SIZE + 64000);
+            buffer::clear(buffer, _delay);
             _delay = delay;
             bufStart = &buffer[_delay];
             base_type::init(in);
@@ -38,7 +38,7 @@ namespace dsp::math {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
-            clearBuffer(buffer, _delay);
+            buffer::clear(buffer, _delay);
             base_type::tempStart();
         }
 
