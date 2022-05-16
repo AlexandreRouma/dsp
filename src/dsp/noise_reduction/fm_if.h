@@ -76,6 +76,18 @@ namespace dsp::noise_reduction {
             return count;
         }
 
+        int run() {
+            int count = base_type::_in->read();
+            if (count < 0) { return -1; }
+
+            process(count, base_type::_in->readBuf, base_type::out.writeBuf);
+
+            // Swap if some data was generated
+            base_type::_in->flush();
+            if (!base_type::out.swap(count)) { return -1; }
+            return count;
+        }
+
     protected:
         void initBuffers() {
             // Allocate FFT buffers
