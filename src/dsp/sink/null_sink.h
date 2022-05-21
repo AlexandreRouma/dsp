@@ -6,9 +6,9 @@ namespace dsp::sink {
     class Null : public Sink<T> {
         using base_type = Sink<T>;
     public:
-        HandlerSink() {}
+        Null() {}
 
-        HandlerSink(stream<T>* in, void (*handler)(T* data, int count, void* ctx), void* ctx) { base_type::init(in); }
+        Null(stream<T>* in, void (*handler)(T* data, int count, void* ctx), void* ctx) { base_type::init(in); }
 
         int run() {
             int count = base_type::_in->read();
@@ -16,6 +16,5 @@ namespace dsp::sink {
             base_type::_in->flush();
             return count;
         }
-
-    }
+    };
 }

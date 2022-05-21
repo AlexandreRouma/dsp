@@ -62,7 +62,7 @@ namespace dsp::buffer {
 
             // Push it on the ring buffer
             {
-                std::lock_guard<std::recursive_mutex> lck(bufMtx);
+                std::lock_guard<std::mutex> lck(bufMtx);
                 memcpy(buffers[writeCur], _in->readBuf, count * sizeof(T));
                 sizes[writeCur] = count;
                 writeCur++;
@@ -105,7 +105,7 @@ namespace dsp::buffer {
 
     private:
         void doStart() {
-            base_type::workerThread = std::thread(&base_type::workerLoop, this);
+            base_type::workerThread = std::thread(&SampleFrameBuffer<T>::workerLoop, this);
             readWorkerThread = std::thread(&SampleFrameBuffer<T>::worker, this);
         }
 

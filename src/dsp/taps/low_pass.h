@@ -4,7 +4,7 @@
 #include "../window/nuttall.h"
 
 namespace dsp::taps {
-    tap<float> lowPass(double cutoff, double transWidth, double sampleRate) {
+    inline tap<float> lowPass(double cutoff, double transWidth, double sampleRate) {
         return windowedSinc<float>(estimateTapCount(transWidth, sampleRate), cutoff, sampleRate, window::nuttall);
     }
 }

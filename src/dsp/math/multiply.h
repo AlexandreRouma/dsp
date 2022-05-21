@@ -1,3 +1,4 @@
+#pragma once
 #include "../operator.h"
 
 namespace dsp::math {

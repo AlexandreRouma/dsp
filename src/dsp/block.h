@@ -64,7 +64,7 @@ namespace dsp {
 
         virtual int run() = 0;
 
-    private:
+    protected:
         void workerLoop() {
             while (run() >= 0) {}
         }
@@ -93,10 +93,7 @@ namespace dsp {
                 out->clearWriteStop();
             }
         }
-
-        int tempStopDepth = 0;
-
-    protected:
+    
         void acquire() {
             ctrlMtx.lock();
         }
@@ -130,6 +127,7 @@ namespace dsp {
 
         bool running = false;
         bool tempStopped = false;
+        int tempStopDepth = 0;
         std::thread workerThread;
     };
 }

@@ -2,7 +2,7 @@
 #include "../operator.h"
 
 namespace dsp::convert {
-    class LRToStereo : Operator<float, float, stereo_t> {
+    class LRToStereo : public Operator<float, float, stereo_t> {
         using base_type = Operator<float, float, stereo_t>;
     public:
         LRToStereo() {}

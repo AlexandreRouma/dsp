@@ -44,7 +44,7 @@ namespace dsp {
         }
 
         template<typename Func>
-        void removeBlock(Processor<T, T>* block Func onOutputChange) {
+        void removeBlock(Processor<T, T>* block, Func onOutputChange) {
             // Check if block is part of the chain
             if (!blockExists(block)) {
                 throw std::runtime_error("[chain] Tried to remove a block that is not part of the chain");

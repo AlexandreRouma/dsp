@@ -8,7 +8,7 @@
 
 namespace dsp::taps {
     template<class T>
-    tap<T> bandPass(double bandStart, double bandStop, double transWidth, double sampleRate) {
+    inline tap<T> bandPass(double bandStart, double bandStop, double transWidth, double sampleRate) {
         assert(bandStop > bandStart);
         float offsetOmega = math::freqToOmega((bandStart + bandStop) / 2.0, sampleRate);
         return windowedSinc<T>(estimateTapCount(transWidth, sampleRate), (bandStop - bandStart) / 2.0, sampleRate, [=](double n, double N) {

@@ -6,9 +6,9 @@ namespace dsp::sink {
     class Handler : public Sink<T> {
         using base_type = Sink<T>;
     public:
-        HandlerSink() {}
+        Handler() {}
 
-        HandlerSink(stream<T>* in, void (*handler)(T* data, int count, void* ctx), void* ctx) { init(in, handler, ctx); }
+        Handler(stream<T>* in, void (*handler)(T* data, int count, void* ctx), void* ctx) { init(in, handler, ctx); }
 
         void init(stream<T>* in, void (*handler)(T* data, int count, void* ctx), void* ctx) {
             _handler = handler;
@@ -30,5 +30,5 @@ namespace dsp::sink {
         void (*_handler)(T* data, int count, void* ctx);
         void* _ctx;
 
-    }
+    };
 }
