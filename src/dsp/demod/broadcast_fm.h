@@ -128,16 +128,16 @@ namespace dsp::demod {
 
                 // Filter out pilot and run through PLL
                 pilotFir.process(count, rtoc.out.writeBuf, pilotFir.out.writeBuf);
-                pilotPLL.process(count, pilotFir.out.writeBuf, pilotFir.out.writeBuf);
+                pilotPLL.process(count, pilotFir.out.writeBuf, pilotPLL.out.writeBuf);
 
                 // Delay
                 lprDelay.process(count, demod.out.writeBuf, demod.out.writeBuf);
                 lmrDelay.process(count, rtoc.out.writeBuf, rtoc.out.writeBuf);
                 
                 // Double and conjugate PLL output to down convert the L-R signal
-                math::Multiply<dsp::complex_t>::process(count, pilotFir.out.writeBuf, pilotFir.out.writeBuf, pilotFir.out.writeBuf);
-                math::Conjugate::process(count, pilotFir.out.writeBuf, pilotFir.out.writeBuf);
-                math::Multiply<dsp::complex_t>::process(count, rtoc.out.writeBuf, pilotFir.out.writeBuf, rtoc.out.writeBuf);
+                math::Multiply<dsp::complex_t>::process(count, pilotPLL.out.writeBuf, pilotPLL.out.writeBuf, pilotPLL.out.writeBuf);
+                math::Conjugate::process(count, pilotPLL.out.writeBuf, pilotPLL.out.writeBuf);
+                math::Multiply<dsp::complex_t>::process(count, rtoc.out.writeBuf, pilotPLL.out.writeBuf, rtoc.out.writeBuf);
 
                 // Convert output back to real for further processing
                 convert::ComplexToReal::process(count, rtoc.out.writeBuf, lmr);
