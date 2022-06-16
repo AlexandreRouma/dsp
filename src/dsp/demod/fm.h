@@ -14,6 +14,7 @@ namespace dsp::demod {
 
         FM(stream<complex_t>* in, double deviation, double samplerate) { init(in, deviation, samplerate); }
 
+        
         virtual void init(stream<complex_t>* in, double deviation) {
             _invDeviation = 1.0 / deviation;
             base_type::init(in);

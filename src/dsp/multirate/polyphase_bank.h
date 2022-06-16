@@ -23,13 +23,26 @@ namespace dsp::multirate {
         pb.tapsPerPhase = (taps.size + phaseCount - 1) / phaseCount;
         for (int i = 0; i < phaseCount; i++) {
             pb.phases[i] = buffer::alloc<T>(pb.tapsPerPhase);
+            buffer::clear<T>(pb.phases[i], pb.tapsPerPhase);
         }
 
         // Fill phases
         int totTapCount = phaseCount * pb.tapsPerPhase;
         for (int i = 0; i < totTapCount; i++) {
-            pb.phases[i % phaseCount][i / phaseCount] = (i < taps.size) ? taps.taps[i] : 0;
+            pb.phases[(phaseCount - 1) - (i % phaseCount)][i / phaseCount] = (i < taps.size) ? taps.taps[i] : 0;
         }
+
+        // int currentTap = 0;
+        // for (int tap = 0; tap < pb.tapsPerPhase; tap++) {
+        //     for (int phase = 0; phase < phaseCount; phase++) {
+        //         if (currentTap < taps.size) {
+        //             pb.phases[(phaseCount - 1) - phase][tap] = taps.taps[currentTap++];
+        //         }
+        //         else {
+        //             pb.phases[(phaseCount - 1) - phase][tap] = 0;
+        //         }
+        //     }
+        // }
 
         return pb;
     }

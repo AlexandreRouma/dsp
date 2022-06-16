@@ -77,7 +77,7 @@ namespace dsp::multirate {
                 if constexpr (std::is_same_v<T, float>) {
                     volk_32f_x2_dot_prod_32f(&out[outCount++], &buffer[offset], phases.phases[phase], phases.tapsPerPhase);
                 }
-                if constexpr (std::is_same_v<T, complex_t>) {
+                if constexpr (std::is_same_v<T, complex_t> || std::is_same_v<T, stereo_t>) {
                     volk_32fc_32f_dot_prod_32fc((lv_32fc_t*)&out[outCount++], (lv_32fc_t*)&buffer[offset], phases.phases[phase], phases.tapsPerPhase);
                 }
 

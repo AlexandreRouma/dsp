@@ -9,7 +9,7 @@ namespace dsp::convert {
 
         MonoToStereo(stream<float>* in) { base_type::init(in); }
         
-        inline int process(int count, const float* in, stereo_t* out) {
+        inline static int process(int count, const float* in, stereo_t* out) {
             volk_32f_x2_interleave_32fc((lv_32fc_t*)out, in, in, count);
             return count;
         }

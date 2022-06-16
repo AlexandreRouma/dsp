@@ -1,0 +1,11 @@
+var searchData=
+[
+  ['operator_907',['Operator',['../classdsp_1_1Operator.html#a99a0fe4b40f796cc61bf3c9d56851167',1,'dsp::Operator::Operator()'],['../classdsp_1_1Operator.html#a5758cc3a4934c6d57d75f7abe45ca473',1,'dsp::Operator::Operator(stream&lt; A &gt; *a, stream&lt; B &gt; *b)']]],
+  ['operator_2a_908',['operator*',['../structdsp_1_1complex__t.html#a7ca42a326c4594dfae2c521708eb60dc',1,'dsp::complex_t::operator*(const float b)'],['../structdsp_1_1complex__t.html#a6cd659288b69c8d464d9b53e3e91c445',1,'dsp::complex_t::operator*(const double b)'],['../structdsp_1_1complex__t.html#a38ffeffdac3c6bd0cb30752143acca06',1,'dsp::complex_t::operator*(const complex_t &amp;b)'],['../structdsp_1_1stereo__t.html#aba01914a23645c0fb6a7c656cf9e32f0',1,'dsp::stereo_t::operator*()']]],
+  ['operator_2a_3d_909',['operator*=',['../structdsp_1_1complex__t.html#a6aba91b756e2aa8801dc3ecd72986f3c',1,'dsp::complex_t::operator*=()'],['../structdsp_1_1stereo__t.html#a12c6e085f025e0ac75572fda6fcec268',1,'dsp::stereo_t::operator*=()']]],
+  ['operator_2b_910',['operator+',['../structdsp_1_1complex__t.html#ab74a57e46c4c7e4b457485893a9b0b5d',1,'dsp::complex_t::operator+()'],['../structdsp_1_1stereo__t.html#a0e74646157a9a1bb4f55a11b02c02f5d',1,'dsp::stereo_t::operator+()']]],
+  ['operator_2b_3d_911',['operator+=',['../structdsp_1_1complex__t.html#a994ff590578d5772fb96194487fcb8cf',1,'dsp::complex_t::operator+=()'],['../structdsp_1_1stereo__t.html#a6e3e8ebbe26c96ad7412c9e2d0bc04f5',1,'dsp::stereo_t::operator+=()']]],
+  ['operator_2d_912',['operator-',['../structdsp_1_1complex__t.html#ac0bbedc30b50877fbc8de91e88d87775',1,'dsp::complex_t::operator-()'],['../structdsp_1_1stereo__t.html#a0cb710caabf62d75834260e3632cd1d2',1,'dsp::stereo_t::operator-()']]],
+  ['operator_2d_3d_913',['operator-=',['../structdsp_1_1complex__t.html#a7ae93bda6e0668029b4e5c7bebfde84b',1,'dsp::complex_t::operator-=()'],['../structdsp_1_1stereo__t.html#ac5af10970fe51dd1f1a95eef733c86e2',1,'dsp::stereo_t::operator-=()']]],
+  ['operator_2f_914',['operator/',['../structdsp_1_1complex__t.html#a5243ee1642b8f33e8602bb4367041b86',1,'dsp::complex_t::operator/(const float b)'],['../structdsp_1_1complex__t.html#a00db97381a8082ca2f749263e8752a39',1,'dsp::complex_t::operator/(const double b)']]]
+];

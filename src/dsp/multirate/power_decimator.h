@@ -93,7 +93,7 @@ namespace dsp::multirate {
             freeFirs();
 
             // Generate filters based on DDC plan
-            if (_ratio) {
+            if (_ratio > 1) {
                 int planId = log2(_ratio) - 1;
                 decim::plan plan = decim::plans[planId];
                 stageCount = plan.stageCount;

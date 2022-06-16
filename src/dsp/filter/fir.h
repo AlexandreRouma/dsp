@@ -86,7 +86,7 @@ namespace dsp::filter {
 
     protected:
         tap<T> _taps;
-        complex_t* buffer;
-        complex_t* bufStart;
+        D* buffer;
+        D* bufStart;
     };
 }

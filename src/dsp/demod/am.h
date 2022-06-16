@@ -49,7 +49,7 @@ namespace dsp::demod {
             base_type::tempStart();
         }
 
-        int process(int count, const complex_t* in, float* out) {
+        int process(int count, complex_t* in, float* out) {
             // Apply carrier AGC if needed
             if (_agcMode == AGCMode::CARRIER) {
                 carrierAgc.process(count, in, carrierAgc.out.writeBuf);
@@ -63,6 +63,8 @@ namespace dsp::demod {
             if (_agcMode == AGCMode::AUDIO) {
                 audioAgc.process(count, out, out);
             }
+
+            return count;
         }
 
         int run() {

@@ -127,6 +127,20 @@ namespace dsp {
             }
         }
 
+        template<typename Func>
+        void enableAllBlocks(Func onOutputChange) {
+            for (auto& ln : links) {
+                enableBlock(ln, onOutputChange);
+            }
+        }
+
+        template<typename Func>
+        void disableAllBlocks(Func onOutputChange) {
+            for (auto& ln : links) {
+                disableBlock(ln, onOutputChange);
+            }
+        }
+
         void start() {
             if (running) { return; }
             for (auto& ln : links) {

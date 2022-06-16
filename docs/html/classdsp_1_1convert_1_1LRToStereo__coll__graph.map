@@ -1,0 +1,10 @@
+<map id="dsp::convert::LRToStereo" name="dsp::convert::LRToStereo">
+<area shape="rect" id="node1" title=" " alt="" coords="133,304,316,331"/>
+<area shape="rect" id="node2" href="$classdsp_1_1Operator.html" title=" " alt="" coords="145,213,304,255"/>
+<area shape="rect" id="node3" href="$classdsp_1_1block.html" title=" " alt="" coords="33,109,121,136"/>
+<area shape="rect" id="node4" href="$classdsp_1_1generic__block.html" title=" " alt="" coords="5,5,148,32"/>
+<area shape="rect" id="node5" href="$classdsp_1_1stream.html" title=" " alt="" coords="328,109,511,136"/>
+<area shape="rect" id="node6" href="$classdsp_1_1untyped__stream.html" title=" " alt="" coords="177,5,336,32"/>
+<area shape="rect" id="node8" href="$classdsp_1_1stream.html" title=" " alt="" coords="145,109,304,136"/>
+<area shape="rect" id="node7" href="$structdsp_1_1stereo__t.html" title=" " alt="" coords="366,5,473,32"/>
+</map>

@@ -17,10 +17,12 @@ namespace dsp::math {
         }
 
         void init(stream<T>* in, int delay) {
-            buffer = buffer::alloc<float>(STREAM_BUFFER_SIZE + 64000);
-            buffer::clear(buffer, _delay);
             _delay = delay;
+
+            buffer = buffer::alloc<T>(STREAM_BUFFER_SIZE + 64000);
             bufStart = &buffer[_delay];
+            buffer::clear(buffer, _delay);
+
             base_type::init(in);
         }
 

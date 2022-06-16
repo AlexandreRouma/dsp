@@ -1,0 +1,8 @@
+<map id="src/dsp/channel" name="src/dsp/channel">
+<area shape="rect" id="node1" href="dir_9e3f130d255a23d6974101f332d2882c.html" title="channel" alt="" coords="61,52,134,100"/>
+<area shape="rect" id="node2" href="dir_15b8dcc22a26927f1d2e752575b0f01f.html" title="multirate" alt="" coords="5,148,88,196"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000005_000013.html" title="1" alt="" coords="70,129,80,143"/>
+<area shape="rect" id="node3" href="dir_b1c49da1247d11704d6d95b4943150e0.html" title="math" alt="" coords="112,148,184,196"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000005_000012.html" title="1" alt="" coords="130,121,139,135"/>
+<area shape="rect" id="clust1" href="dir_01d2cdbd82b1e18dc073ab3ebd5ada7e.html" title="dsp" alt="" coords="49,16,145,111"/>
+</map>

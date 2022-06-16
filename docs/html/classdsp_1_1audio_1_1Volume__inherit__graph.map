@@ -1,0 +1,6 @@
+<map id="dsp::audio::Volume" name="dsp::audio::Volume">
+<area shape="rect" id="node1" title=" " alt="" coords="18,244,165,271"/>
+<area shape="rect" id="node2" href="$classdsp_1_1Processor.html" title=" " alt="" coords="5,155,177,196"/>
+<area shape="rect" id="node3" href="$classdsp_1_1block.html" title=" " alt="" coords="47,80,135,107"/>
+<area shape="rect" id="node4" href="$classdsp_1_1generic__block.html" title=" " alt="" coords="20,5,163,32"/>
+</map>

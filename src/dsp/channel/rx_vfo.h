@@ -15,12 +15,12 @@ namespace dsp::channel {
             _outSamplerate = outSamplerate;
             _bandwidth = bandwidth;
             _offset = offset;
-            filterNeeded = (_bandwidth == _outSamplerate);
+            filterNeeded = (_bandwidth != _outSamplerate);
             ftaps.taps = NULL;
 
             xlator.init(NULL, -_offset, _inSamplerate);
             resamp.init(NULL, _inSamplerate, _outSamplerate);
-            updateTaps();
+            generateTaps();
             filter.init(NULL, ftaps);
 
             base_type::init(in);
@@ -42,9 +42,12 @@ namespace dsp::channel {
             base_type::tempStop();
             _outSamplerate = outSamplerate;
             _bandwidth = bandwidth;
-            filterNeeded = (_bandwidth == _outSamplerate);
+            filterNeeded = (_bandwidth != _outSamplerate);
             resamp.setOutSamplerate(_outSamplerate);
-            if (filterNeeded) { updateTaps(); }
+            if (filterNeeded) {
+                generateTaps();
+                filter.setTaps(ftaps);
+            }
             base_type::tempStart();
         }
 
@@ -53,8 +56,11 @@ namespace dsp::channel {
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             base_type::tempStop();
             _bandwidth = bandwidth;
-            filterNeeded = (_bandwidth == _outSamplerate);
-            if (filterNeeded) { updateTaps(); }
+            filterNeeded = (_bandwidth != _outSamplerate);
+            if (filterNeeded) {
+                generateTaps();
+                filter.setTaps(ftaps);
+            }
             base_type::tempStart();
         }
 
@@ -62,7 +68,7 @@ namespace dsp::channel {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
             _offset = offset;
-            xlator.setOffset(_offset);
+            xlator.setOffset(-_offset, _inSamplerate);
         }
 
         void reset() {
@@ -100,10 +106,11 @@ namespace dsp::channel {
         }
 
     protected:
-        void updateTaps() {
+        void generateTaps() {
             taps::free(ftaps);
             double filterWidth = _bandwidth / 2.0;
             ftaps = taps::lowPass(filterWidth, filterWidth * 0.1, _outSamplerate);
+            printf("New taps just dropped: %lf %lf %lf\n", filterWidth, filterWidth*0.1, _outSamplerate);
         }
 
         FrequencyXlator xlator;

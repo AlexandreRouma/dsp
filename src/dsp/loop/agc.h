@@ -42,7 +42,7 @@ namespace dsp::loop {
             gain = _initGain;
         }
 
-        inline int process(int count, const T* in, T* out) {
+        inline int process(int count, T* in, T* out) {
             for (int i = 0; i < count; i++) {
                 // Scale output by gain
                 out[i] = in[i] * gain;
