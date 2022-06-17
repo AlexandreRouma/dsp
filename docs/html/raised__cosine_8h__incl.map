@@ -1,8 +1,0 @@
-<map id="src/dsp/taps/raised_cosine.h" name="src/dsp/taps/raised_cosine.h">
-<area shape="rect" id="node1" title=" " alt="" coords="101,5,245,47"/>
-<area shape="rect" id="node2" title=" " alt="" coords="236,169,304,196"/>
-<area shape="rect" id="node3" href="$tap_8h.html" title=" " alt="" coords="25,95,80,121"/>
-<area shape="rect" id="node5" href="$constants_8h.html" title=" " alt="" coords="155,95,302,121"/>
-<area shape="rect" id="node6" href="$sinc_8h.html" title=" " alt="" coords="327,95,437,121"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,169,100,196"/>
-</map>

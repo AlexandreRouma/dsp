@@ -1,9 +1,0 @@
-<map id="dsp::noise_reduction::FMIF" name="dsp::noise_reduction::FMIF">
-<area shape="rect" id="node1" title=" " alt="" coords="257,363,413,404"/>
-<area shape="rect" id="node2" href="$classdsp_1_1Processor.html" title=" " alt="" coords="171,272,358,313"/>
-<area shape="rect" id="node3" href="$classdsp_1_1block.html" title=" " alt="" coords="43,109,131,136"/>
-<area shape="rect" id="node4" href="$classdsp_1_1generic__block.html" title=" " alt="" coords="5,5,148,32"/>
-<area shape="rect" id="node5" href="$classdsp_1_1stream.html" title=" " alt="" coords="166,109,363,136"/>
-<area shape="rect" id="node6" href="$classdsp_1_1untyped__stream.html" title=" " alt="" coords="172,5,331,32"/>
-<area shape="rect" id="node7" href="$structdsp_1_1complex__t.html" title=" " alt="" coords="355,5,476,32"/>
-</map>

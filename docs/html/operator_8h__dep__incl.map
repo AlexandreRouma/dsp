@@ -1,8 +1,0 @@
-<map id="src/dsp/operator.h" name="src/dsp/operator.h">
-<area shape="rect" id="node1" title=" " alt="" coords="281,5,420,32"/>
-<area shape="rect" id="node2" href="$l__r__to__stereo_8h.html" title=" " alt="" coords="5,80,147,121"/>
-<area shape="rect" id="node4" href="$multiply_8h.html" title=" " alt="" coords="171,87,346,114"/>
-<area shape="rect" id="node5" href="$add_8h.html" title=" " alt="" coords="371,87,517,114"/>
-<area shape="rect" id="node6" href="$subtract_8h.html" title=" " alt="" coords="542,87,717,114"/>
-<area shape="rect" id="node3" href="$broadcast__fm_8h.html" title=" " alt="" coords="239,169,462,196"/>
-</map>

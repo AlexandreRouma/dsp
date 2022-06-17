@@ -10,7 +10,7 @@ namespace dsp::bench {
 
         PeakLevelMeter(stream<T>* in) { init(in); }
 
-        void init() {
+        void init(stream<T>* in) {
             if constexpr (std::is_same_v<T, float>) {
                 level = 0.0f;
             }

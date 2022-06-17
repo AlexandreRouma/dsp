@@ -1,8 +1,0 @@
-<map id="dsp::multirate::PolyphaseResampler&lt; T &gt;" name="dsp::multirate::PolyphaseResampler&lt; T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="201,261,389,303"/>
-<area shape="rect" id="node2" href="$classdsp_1_1Processor.html" title=" " alt="" coords="5,165,176,191"/>
-<area shape="rect" id="node3" href="$classdsp_1_1block.html" title=" " alt="" coords="47,81,135,108"/>
-<area shape="rect" id="node4" href="$classdsp_1_1generic__block.html" title=" " alt="" coords="19,5,162,32"/>
-<area shape="rect" id="node5" href="$structdsp_1_1multirate_1_1PolyphaseBank.html" title=" " alt="" coords="201,157,389,199"/>
-<area shape="rect" id="node6" href="$classdsp_1_1tap.html" title=" " alt="" coords="413,165,547,191"/>
-</map>

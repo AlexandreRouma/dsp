@@ -1,7 +1,0 @@
-<map id="dsp::multirate::RationalResampler&lt; T &gt;" name="dsp::multirate::RationalResampler&lt; T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="91,247,266,288"/>
-<area shape="rect" id="node2" href="$classdsp_1_1Processor.html" title=" " alt="" coords="5,157,176,184"/>
-<area shape="rect" id="node3" href="$classdsp_1_1block.html" title=" " alt="" coords="47,81,135,108"/>
-<area shape="rect" id="node4" href="$classdsp_1_1generic__block.html" title=" " alt="" coords="19,5,162,32"/>
-<area shape="rect" id="node5" href="$classdsp_1_1tap.html" title=" " alt="" coords="201,157,335,184"/>
-</map>

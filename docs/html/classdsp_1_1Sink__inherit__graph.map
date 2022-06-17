@@ -1,9 +1,0 @@
-<map id="dsp::Sink&lt; T &gt;" name="dsp::Sink&lt; T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="332,81,451,108"/>
-<area shape="rect" id="node4" href="$classdsp_1_1bench_1_1PeakLevelMeter.html" title=" " alt="" coords="499,5,741,32"/>
-<area shape="rect" id="node5" href="$classdsp_1_1routing_1_1Splitter.html" title=" " alt="" coords="524,56,716,83"/>
-<area shape="rect" id="node6" href="$classdsp_1_1sink_1_1Handler.html" title=" " alt="" coords="531,107,709,133"/>
-<area shape="rect" id="node7" href="$classdsp_1_1sink_1_1Null.html" title=" " alt="" coords="544,157,696,184"/>
-<area shape="rect" id="node2" href="$classdsp_1_1block.html" title=" " alt="" coords="196,81,284,108"/>
-<area shape="rect" id="node3" href="$classdsp_1_1generic__block.html" title=" " alt="" coords="5,81,148,108"/>
-</map>

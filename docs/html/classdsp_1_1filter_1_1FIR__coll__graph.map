@@ -1,9 +1,0 @@
-<map id="dsp::filter::FIR&lt; D, T &gt;" name="dsp::filter::FIR&lt; D, T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="197,289,367,316"/>
-<area shape="rect" id="node2" href="$classdsp_1_1Processor.html" title=" " alt="" coords="67,185,241,212"/>
-<area shape="rect" id="node3" href="$classdsp_1_1block.html" title=" " alt="" coords="42,81,130,108"/>
-<area shape="rect" id="node4" href="$classdsp_1_1generic__block.html" title=" " alt="" coords="5,5,148,32"/>
-<area shape="rect" id="node5" href="$classdsp_1_1stream.html" title=" " alt="" coords="163,81,302,108"/>
-<area shape="rect" id="node6" href="$classdsp_1_1untyped__stream.html" title=" " alt="" coords="172,5,331,32"/>
-<area shape="rect" id="node7" href="$structdsp_1_1complex__t.html" title=" " alt="" coords="265,185,387,212"/>
-</map>
