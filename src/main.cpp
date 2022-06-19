@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <dsp/bench/speed_tester.h>
-#include <dsp/loop/agc.h>
+#include <dsp/channel/rx_vfo.h>
 
 #define TEST_BUFFER_SIZE    STREAM_BUFFER_SIZE
 #define TEST_DURATION       1000.0
@@ -13,7 +13,7 @@ int main() {
     // ============= DSP Under Test =============
     input = new dsp::stream<dsp::complex_t>;
 
-    dsp::loop::AGC<dsp::complex_t> dut(input, 1.0, 0.5, 10e6, 4.16e-4 * 2.0, 4.16e-4);
+    dsp::channel::RxVFO dut(input, 2400000.0, 250000.0, 200000.0, 1000000.0);
 
     output = &dut.out;
     // ==========================================
