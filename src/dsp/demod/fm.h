@@ -1,54 +1,98 @@
 #pragma once
 #include "../processor.h"
-#include "../math/fast_atan2.h"
-#include "../math/freq_to_omega.h"
-#include "../math/norm_phase_diff.h"
+#include "quadrature.h"
+#include "../filter/fir.h"
+#include "../taps/low_pass.h"
+#include "../convert/mono_to_stereo.h"
 
 namespace dsp::demod {
-    class FM : public Processor<complex_t, float> {
-        using base_type = Processor<complex_t, float>;
+    template <class T>
+    class FM : public dsp::Processor<dsp::complex_t, T> {
+        using base_type = dsp::Processor<dsp::complex_t, T>;
     public:
         FM() {}
 
-        FM(stream<complex_t>* in, double deviation) { init(in, deviation); }
+        FM(dsp::stream<dsp::complex_t>* in, double samplerate, double bandwidth, bool lowPass) { init(in, samplerate, bandwidth, lowPass); }
 
-        FM(stream<complex_t>* in, double deviation, double samplerate) { init(in, deviation, samplerate); }
-
-        
-        virtual void init(stream<complex_t>* in, double deviation) {
-            _invDeviation = 1.0 / deviation;
-            base_type::init(in);
+        ~FM() {
+            if (!base_type::_block_init) { return; }
+            base_type::stop();
+            dsp::taps::free(lpfTaps);
         }
 
-        virtual void init(stream<complex_t>* in, double deviation, double samplerate) {
-            init(in, math::freqToOmega(deviation, samplerate));
-        }
+        void init(dsp::stream<dsp::complex_t>* in, double samplerate, double bandwidth, bool lowPass) {
+            _samplerate = samplerate;
+            _bandwidth = bandwidth;
+            _lowPass = lowPass;
 
-        void setDeviation(double deviation) {
-            assert(base_type::_block_init);
-            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
-            _invDeviation = 1.0 / deviation;
-        }
+            demod.init(NULL, bandwidth / 2.0, _samplerate);
+            lpfTaps = dsp::taps::lowPass(_bandwidth / 2.0, (_bandwidth / 2.0) * 0.1, _samplerate);
+            lpf.init(NULL, lpfTaps);
 
-        void setDeviation(double deviation, double samplerate) {
-            assert(base_type::_block_init);
-            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
-            _invDeviation = 1.0 / math::freqToOmega(deviation, samplerate);
-        }
-
-        inline int process(int count, complex_t* in, float* out) {
-            for (int i = 0; i < count; i++) {
-                float cphase = in[i].phase();
-                out[i] = math::normPhaseDiff(cphase - phase) * _invDeviation;
-                phase = cphase;
+            if constexpr (std::is_same_v<T, float>) {
+                demod.out.free();
             }
-            return count;
+            lpf.out.free();
+        }
+
+        void setSamplerate(double samplerate) {
+            assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
+            base_type::tempStop();
+            _samplerate = samplerate;
+            demod.setDeviation(_bandwidth / 2.0, _samplerate);
+            dsp::taps::free(lpfTaps);
+            lpfTaps = dsp::taps::lowPass(_bandwidth / 2.0, (_bandwidth / 2.0) * 0.1, _samplerate);
+            lpf.setTaps(lpfTaps);
+            base_type::tempStart();
+        }
+
+        void setBandwidth(double bandwidth) {
+            assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
+            if (bandwidth == _bandwidth) { return; }
+            _bandwidth = bandwidth;
+            std::lock_guard<std::mutex> lck2(lpfMtx);
+            demod.setDeviation(_bandwidth / 2.0, _samplerate);
+            dsp::taps::free(lpfTaps);
+            lpfTaps = dsp::taps::lowPass(_bandwidth / 2, (_bandwidth / 2) * 0.1, _samplerate);
+            lpf.setTaps(lpfTaps);
+        }
+
+        void setLowPass(bool lowPass) {
+            assert(base_type::_block_init);
+            std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
+            std::lock_guard<std::mutex> lck2(lpfMtx);
+            _lowPass = lowPass;
+            lpf.reset();
         }
 
         void reset() {
             assert(base_type::_block_init);
             std::lock_guard<std::recursive_mutex> lck(base_type::ctrlMtx);
-            phase = 0.0f;
+            base_type::tempStop();
+            demod.reset();
+            lpf.reset();
+            base_type::tempStart();
+        }
+
+        inline int process(int count, dsp::complex_t* in, T* out) {
+            if constexpr (std::is_same_v<T, float>) {
+                demod.process(count, in, out);
+                if (_lowPass) {
+                    std::lock_guard<std::mutex> lck(lpfMtx);
+                    lpf.process(count, out, out);
+                }
+            }
+            if constexpr (std::is_same_v<T, stereo_t>) {
+                demod.process(count, in, demod.out.writeBuf);
+                if (_lowPass) {
+                    std::lock_guard<std::mutex> lck(lpfMtx);
+                    lpf.process(count, demod.out.writeBuf, demod.out.writeBuf);
+                }
+                convert::MonoToStereo::process(count, demod.out.writeBuf, out);
+            }
+            return count;
         }
 
         int run() {
@@ -62,8 +106,14 @@ namespace dsp::demod {
             return count;
         }
 
-    protected:
-        float _invDeviation;
-        float phase = 0.0f;
+    private:
+        double _samplerate;
+        double _bandwidth;
+        bool _lowPass;
+
+        Quadrature demod;
+        tap<float> lpfTaps;
+        filter::FIR<float, float> lpf;
+        std::mutex lpfMtx;
     };
 }

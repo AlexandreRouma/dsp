@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <dsp/bench/speed_tester.h>
-#include <dsp/channel/rx_vfo.h>
+#include <dsp/demod/am.h>
 
-#define TEST_BUFFER_SIZE    STREAM_BUFFER_SIZE
+#define TEST_BUFFER_SIZE    (2400000 / 200)
 #define TEST_DURATION       1000.0
 #define TEST_COUNT          5
 
+#define IN_TYPE             dsp::complex_t
+#define OUT_TYPE            dsp::stereo_t
+
 int main() {
-    dsp::stream<dsp::complex_t>* input;
-    dsp::stream<dsp::complex_t>* output;
+    dsp::stream<IN_TYPE>* input;
+    dsp::stream<OUT_TYPE>* output;
 
     // ============= DSP Under Test =============
-    input = new dsp::stream<dsp::complex_t>;
+    input = new dsp::stream<IN_TYPE>;
 
-    dsp::channel::RxVFO dut(input, 2400000.0, 250000.0, 200000.0, 1000000.0);
+    dsp::demod::AM<OUT_TYPE> dut(input, dsp::demod::AM<OUT_TYPE>::AGCMode::CARRIER, 10000.0, 0.001, 0.001, 0.001, 30000.0);
 
     output = &dut.out;
     // ==========================================
@@ -22,7 +25,7 @@ int main() {
     // dut.setOutSamplerate(24000.0);
 
     // Run benchmark
-    dsp::bench::SpeedTester<dsp::complex_t, dsp::complex_t> st(input, output);
+    dsp::bench::SpeedTester<IN_TYPE, OUT_TYPE> st(input, output);
     dut.start();
     for (int i = 0; i < TEST_COUNT; i++) {
         dut.reset();
