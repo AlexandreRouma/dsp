@@ -97,9 +97,9 @@ namespace dsp::loop {
                         if (inAmp > maxAmp) { maxAmp = inAmp; }
                     }
                     amp = maxAmp;
-                    gain = _setPoint / maxAmp;
+                    gain = std::min<float>(_setPoint / amp, _maxGain);
                 }
-
+                
                 // Scale output by gain
                 out[i] = in[i] * gain;
             }
