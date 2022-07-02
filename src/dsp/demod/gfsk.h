@@ -6,16 +6,16 @@
 
 namespace dsp::demod {
     // Note: I don't like how this demodulator reuses 90% of the code from the PSK demod. Same will be for the PM demod...
-    class GMSK : public Processor<complex_t, float> {
+    class GFSK : public Processor<complex_t, float> {
         using base_type = Processor<complex_t, float>;
     public:
-        GMSK() {}
+        GFSK() {}
 
-        GMSK(stream<complex_t>* in, double symbolrate, double samplerate, double deviation, int rrcTapCount, double rrcBeta, double omegaGain, double muGain, double omegaRelLimit = 0.01) {
+        GFSK(stream<complex_t>* in, double symbolrate, double samplerate, double deviation, int rrcTapCount, double rrcBeta, double omegaGain, double muGain, double omegaRelLimit = 0.01) {
             init(in, symbolrate, samplerate, deviation, rrcTapCount, rrcBeta, omegaGain, muGain);
         }
 
-        ~GMSK() {
+        ~GFSK() {
             if (!base_type::_block_init) { return; }
             base_type::stop();
             taps::free(rrcTaps);
@@ -28,7 +28,7 @@ namespace dsp::demod {
             _rrcTapCount = rrcTapCount;
             _rrcBeta = rrcBeta;
             
-            demod.init(NULL, _deviation);
+            demod.init(NULL, _deviation, _samplerate);
             rrcTaps = taps::rootRaisedCosine<float>(_rrcTapCount, _rrcBeta, _symbolrate, _samplerate);
             rrc.init(NULL, rrcTaps);
             recov.init(NULL, _samplerate / _symbolrate,  omegaGain, muGain, omegaRelLimit);

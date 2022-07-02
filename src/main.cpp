@@ -6,8 +6,8 @@
 #define TEST_DURATION       1000.0
 #define TEST_COUNT          5
 
-#define IN_TYPE             dsp::complex_t
-#define OUT_TYPE            dsp::complex_t
+#define IN_TYPE             float
+#define OUT_TYPE            float
 
 int main() {
     dsp::stream<IN_TYPE>* input;
@@ -16,7 +16,7 @@ int main() {
     // ============= DSP Under Test =============
     input = new dsp::stream<IN_TYPE>;
 
-    dsp::clock_recovery::MM<dsp::complex_t> dut(input, 2.0, 0.000001, 0.02, 0.01);
+    dsp::clock_recovery::MM<float> dut(input, 2.0, 0.000001, 0.02, 0.01);
 
     output = &dut.out;
     // ==========================================

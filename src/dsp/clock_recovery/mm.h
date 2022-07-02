@@ -108,7 +108,7 @@ namespace dsp::clock_recovery {
                 T outVal;
 
                 // Calculate new output value
-                int phase = floorf(pcl.phase * (float)_interpPhaseCount);
+                int phase = std::clamp<int>(floorf(pcl.phase * (float)_interpPhaseCount), 0, _interpPhaseCount - 1);
                 if constexpr (std::is_same_v<T, float>) {
                     volk_32f_x2_dot_prod_32f(&outVal, &buffer[offset], interpBank.phases[phase], _interpTapCount);
                 }
