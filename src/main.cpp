@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <dsp/bench/speed_tester.h>
-#include <dsp/clock_recovery/mm.h>
+#include <dsp/multirate/rrc_interpolator.h>
 
 #define TEST_BUFFER_SIZE    (2400000 / 200)
 #define TEST_DURATION       1000.0
 #define TEST_COUNT          5
 
-#define IN_TYPE             float
-#define OUT_TYPE            float
+#define IN_TYPE             dsp::complex_t
+#define OUT_TYPE            dsp::complex_t
 
 int main() {
     dsp::stream<IN_TYPE>* input;
@@ -16,13 +16,10 @@ int main() {
     // ============= DSP Under Test =============
     input = new dsp::stream<IN_TYPE>;
 
-    dsp::clock_recovery::MM<float> dut(input, 2.0, 0.000001, 0.02, 0.01);
+    dsp::multirate::RRCInterpolator<dsp::complex_t> dut(input, 250000.0, 1000000.0, 0.6, 31);
 
     output = &dut.out;
     // ==========================================
-
-    // // dut.setInSamplerate(2400000.0);
-    // // dut.setOutSamplerate(24000.0);
 
     // Run benchmark
     dsp::bench::SpeedTester<IN_TYPE, OUT_TYPE> st(input, output);
