@@ -18,7 +18,7 @@ endif ()
 
 
 # Include core headers
-target_include_directories(sdrpp_dsp PUBLIC "src/")
+target_include_directories(sdrpp_dsp PUBLIC "src/" "lib/")
 
 if (MSVC)
     # Lib path
